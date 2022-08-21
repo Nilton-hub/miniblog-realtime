@@ -12,13 +12,28 @@ class Pusher implements WampServerInterface {
 	{
 		$this->subscribedTopics = [];
 	}
-	
+
 	/**
 	 *
 	 */
     public function onSubscribe(ConnectionInterface $conn, $topic)
 	{
+		echo "Nova conexão estabelecida #{$topic->getId()}" . PHP_EOL;
 		$this->subscribedTopics[$topic->getId()] = $topic;
+    }
+
+	public function onBlogEntry($entry) {
+        $entryData = json_decode($entry, true);
+
+        // Se o objeto do tópico de pesquisa não estiver definido, não haverá ninguém para quem publicar
+        if (!array_key_exists($entryData['category'], $this->subscribedTopics)) {
+            return;
+        }
+
+        $topic = $this->subscribedTopics[$entryData['category']];
+
+        // reenviar os dados para todos os clientes inscritos nessa categoria
+        $topic->broadcast($entryData);
     }
 
 	/**
@@ -26,6 +41,7 @@ class Pusher implements WampServerInterface {
 	 */
     public function onUnSubscribe(ConnectionInterface $conn, $topic)
 	{
+
     }
 
 	/**
