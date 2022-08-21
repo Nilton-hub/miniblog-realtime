@@ -1,5 +1,5 @@
 <?php
-require dirname(__DIR__) . '/../vendor/autoload.php';
+require dirname(__DIR__, 1) . '/vendor/autoload.php';
 
 // $loop   = React\EventLoop\Factory::create();
 $loop = React\EventLoop\Loop::get();
@@ -32,7 +32,7 @@ $options = [
 $webSock = new React\Socket\SocketServer('127.0.0.1:8080', ['tcp' => $options], $loop);  // Binding to 0.0.0.0 means remotes can connect
 // $webSock->on('connection', function (React\Socket\ConnectionInterface $connection) {
 //     echo 'Plaintext connection from ' . $connection->getRemoteAddress() . PHP_EOL;
-    
+
 //     $connection->write('hello there!' . PHP_EOL);
 // });
 

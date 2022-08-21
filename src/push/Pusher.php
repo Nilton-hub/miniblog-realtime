@@ -4,13 +4,16 @@ namespace src\push;
 
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\WampServerInterface;
+use \SplObjectStorage;
 
 class Pusher implements WampServerInterface {
 	protected array $subscribedTopics;
+	protected SplObjectStorage $subscribers;
 	
 	public function __construct()
 	{
 		$this->subscribedTopics = [];
+		$this->subscribers = new SplObjectStorage();
 	}
 
 	/**
@@ -18,8 +21,9 @@ class Pusher implements WampServerInterface {
 	 */
     public function onSubscribe(ConnectionInterface $conn, $topic)
 	{
-		echo "Nova conexão estabelecida #{$topic->getId()}" . PHP_EOL;
+		//$this->changeOutput(__METHOD__, "Nova inscrição estabelecida #{$topic->getId()}", [$conn, $topic]);
 		$this->subscribedTopics[$topic->getId()] = $topic;
+		$this->subscribers->attach($conn);
     }
 
 	public function onBlogEntry($entry) {
@@ -27,9 +31,10 @@ class Pusher implements WampServerInterface {
 
         // Se o objeto do tópico de pesquisa não estiver definido, não haverá ninguém para quem publicar
         if (!array_key_exists($entryData['category'], $this->subscribedTopics)) {
+			$this->changeOutput(__METHOD__, "Error ao assinar o canal", [$entry]);
             return;
         }
-
+		$this->changeOutput(__METHOD__, "Tópico assinado com sucesso", [$entry]);
         $topic = $this->subscribedTopics[$entryData['category']];
 
         // reenviar os dados para todos os clientes inscritos nessa categoria
@@ -41,7 +46,7 @@ class Pusher implements WampServerInterface {
 	 */
     public function onUnSubscribe(ConnectionInterface $conn, $topic)
 	{
-
+		//$this->changeOutput(__METHOD__, "Assinatura do tópico cancelada #{$topic->getId()}", [$conn, $topic]);
     }
 
 	/**
@@ -49,13 +54,15 @@ class Pusher implements WampServerInterface {
 	 */
     public function onOpen(ConnectionInterface $conn)
 	{
+		//$this->changeOutput(__METHOD__, "Nova conexão aberta", [$conn]);
     }
-	
+
 	/**
 	 *
 	 */
     public function onClose(ConnectionInterface $conn)
 	{
+		//$this->changeOutput(__METHOD__, "Conexão encerrada", [$conn]);
     }
 
 	/**
@@ -63,6 +70,7 @@ class Pusher implements WampServerInterface {
 	 */
     public function onCall(ConnectionInterface $conn, $id, $topic, array $params)
 	{
+		$this->changeOutput(__METHOD__, "Nova chamada", [$conn, $id, $topic, $params]);
         // In this application if clients send data it's because the user hacked around in console
         $conn->callError($id, $topic, 'You are not allowed to make calls')->close();
     }
@@ -74,11 +82,15 @@ class Pusher implements WampServerInterface {
 	 * @var array $exclude
 	 * @var array $eligible
 	 */
-    public function onPublish(ConnectionInterface $conn, string $topic, array $event, array $exclude, array $eligible)
+	//function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible);
+    public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
 	{
+
+		$this->changeOutput(__METHOD__, "Nova publicação", [$conn, $topic, $event, $exclude, $eligible]);
+		// var_dump($topic->getSubscribers());
         // In this application if clients send data it's because the user hacked around in console
 		$topic->broadcast(json_encode($event)); # envia a mensagem para o cliente
-        $conn->close();
+        //$conn->close();
     }
 
 	/**
@@ -86,4 +98,10 @@ class Pusher implements WampServerInterface {
 	 */
     public function onError(ConnectionInterface $conn, \Exception $e) {
     }
+
+	public function changeOutput(string $method, string $message, ?array $params = null): void
+	{
+		echo "[ {$method} ] {$message}" . PHP_EOL;
+		var_dump($params);
+	}
 }

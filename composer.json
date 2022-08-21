@@ -12,6 +12,8 @@
     {
 		"cboden/ratchet" : "^0.4",
 		"niltonduarte/route": "v1.0.2",
-        "textalk/websocket": "^1.5"
+        "textalk/websocket": "^1.5",
+        "react/socket": "^1.11",
+        "ratchet/pawl": "^0.4.1"
     }
 }

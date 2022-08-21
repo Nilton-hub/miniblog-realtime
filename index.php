@@ -18,6 +18,7 @@ $route->post('/artigos', "\\src\\controllers\\App@articlesPost");
 $route->get('/article', "src\\controllers\\App@home");
 $route->get('/posts', "src\\controllers\\App@userPosts");
 $route->post('/comentario-atigos', "src\controllers\\App@articleComment");
+$route->get('/teste', "src\controllers\\Test@test");
 
 $route->run();
 
