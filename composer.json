@@ -1,0 +1,17 @@
+{
+    "autoload" : {
+        "psr-4" : {
+            "src\\" : "src" 
+        },
+		"files": [
+			"./src/config.php",
+			"./src/functions.php"
+		]
+    },
+    "require" :
+    {
+		"cboden/ratchet" : "^0.4",
+		"niltonduarte/route": "v1.0.2",
+        "textalk/websocket": "^1.5"
+    }
+}

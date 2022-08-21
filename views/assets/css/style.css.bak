@@ -1,0 +1,193 @@
+* { box-sizing: border-box; }
+html, body {
+	padding: 0;
+	margin: 0;
+	font-family: 'Trebuchet MS', sans-serif;
+	height: 100vh; /*clac(100vh - 75px);*/
+	width: 100vw;
+	overflow-x: hidden;
+}
+
+button, input[type="button"], input[type="submit"] {
+	letter-spacing: 1px;
+	font-size: 1.2 rem;
+	padding: 5px 10px;
+	cursor: pointer;
+	border-radius: 5px;
+	border: 4px double gray;
+	border-bottom-color: black;
+	border-right-color: black;
+	border-top-color: #cecece;
+	border-left-color: #cecece;
+	background: #e9e9ed;
+}
+
+button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover {
+	background: #ddd;
+	border-bottom-color: #cecece;
+	border-right-color: #cecece;
+	border-top-color: black;
+ 	border-left-color: black;
+}
+
+hr {
+	height: 1px;
+	color: rgba(0, 0, 0, 0.5);
+}
+
+div.message {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	border: 3px solid red;
+	padding: 10px 20px;
+	margin: auto;
+	border-radius: 5px;
+	padding-right: 35px;
+	background: white;
+	box-shadow: 0px 0px 2px gray,
+				0px 0px 4px gray,
+				0px 0px 8px gray;
+	z-index: 3;
+}
+
+div.message button {
+	position: absolute;
+	top: -12.5px;
+	right: -12.5px;
+	width: 30px;
+	height: 30px;
+	font-size: 1.2rem;
+	border-radius: 50%;
+	border: 1px solid red;
+	background: inherit;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 1;
+	cursor: pointer;
+}
+
+nav {
+	display: block;
+	position: relative;
+	height: 75px;
+}
+
+#toggle-menu {
+	display: none;
+}
+
+nav ul {
+	display: flex;
+	align-items: center;
+	gap: 1.5rem;
+	list-style-type: none;
+	position: absolute;
+	margin: 0 20px 0 0;
+	height: 100%;
+	right: 0;
+	top: 0;
+}
+
+nav li {
+	padding: 0;
+	margin: 0;
+}
+
+main {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+}
+
+form input {
+	display: inline-block;
+	width: 100%;
+	padding: 5px;
+	outline: none;
+}
+
+form label {
+	display: inline-block;
+	margin-bottom: 10px;
+}
+
+table {
+	border-collapse: collapse;
+	counter-reset: counter;
+}
+
+table tr td:first-child {
+	counter-increment: counter;
+}
+
+table tr td:first-child::before {
+	content: counter(counter);
+}
+
+td, th {
+	text-align: center;
+	padding: 5px 15px;
+}
+
+tr.pdt-list td:not(:last-child) {
+	border-right: 1px dotted rgba(0, 0, 0, 0.5);
+}
+
+tr.pdt-list:nth-child(odd) {
+	background: aqua;
+}
+
+@media (max-width: 750px) {
+	main {
+		padding: 0;
+		margin: 0;
+		display: block;
+		height: 75px;
+		justify-content: flex-end;
+	}
+	nav {
+		min-height: initial;
+		border-bottom: 1px solid rgba(100, 100, 100, 0.5);
+		padding: 0;
+		margin: 0;
+	}
+	nav::after {
+		content: '';
+		display: block;
+		clear: both;
+	}
+	#toggle-menu {
+		display: inline-block;
+		margin: 10px;
+		font-weight: bold;
+	}
+	nav ul {
+		display: block;
+		position: static;
+		margin: 22px 0 0 auto;
+		width: 50%;
+		height: calc(100vh - 75px);
+		transform: translate(100%, 0);
+		background: #ccc;
+		overflow-x: hidden;
+		transition: transform 0.3s linear 0s;
+	}
+	nav ul.active {
+		transform: translate(0, 0);
+	}
+	nav li {
+		display: block;
+		margin: 15px 0;
+	}
+	main form input {
+		display: inline-block;
+		max-width: 90%;
+	}
+	table {
+		margin: auto;
+	}
+}

@@ -1,0 +1,21 @@
+-- TABLES IN RATCHET --
+
+1) USERS
+	* id - integer, [pk]
+	* name - text
+	* email - text
+	* password - text
+
+2) ARTICLES
+	* id - integer, [pk]
+	* user_id - integer [fk]
+	* title - text
+	* content - text
+
+3) COMMENTS
+	* id - integer, priary key [pk]
+	* user_id - integer [fk]
+	* article_id - integer [fk]
+	* text - text
+
+CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, article_id INTEGER NOT NULL, text TEXT NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE NO ACTION, FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE ON UPDATE NO ACTION)
