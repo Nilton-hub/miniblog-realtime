@@ -8,7 +8,7 @@ class App extends Controller
 	{
 		parent::__construct();
 		if (!isset($_SESSION['user']) && $_SERVER['REQUEST_URI'] !== '/login') {
-			$_SESSION['message'] = 'É necessário estar fazer login para acessar esta página.';
+			$_SESSION['message'] = 'É necessário fazer login para acessar esta página.';
 			header('HTTP/1.1 303 See Other');
 			header('Location: http://localhost:80/login');
 			exit;

@@ -39,20 +39,28 @@
 	<script>
 		const form = document.querySelector('form'),
 			output = document.querySelector('output'),
-			select = document.querySelector('select');
-		let conn;
+			select = document.querySelector('select'),
+			outputMessages = (data) => {
+				const div = document.createElement('div');
+				const b = document.createElement('b');
+				const span = document.createElement('span');
+				b.textContent = data.name + ': ';
+				span.textContent = data.message;
+				div.append(b, span);
+				output.append(div);
+			};
+		let room,
+			conn;
 
 		select.addEventListener('change', (e) => {
 			room = select.value
-			console.log(room);
 
 			const publish = function() {
 				conn.subscribe(room, function(topic, data) {
-					while (typeof data === 'string') {
-						JSON.parse(data);
+					if (data && data != 'undefined') {
+						data = JSON.parse(data);
+						outputMessages(data);
 					}
-					console.log(topic);
-					console.log(data);
 					// console.log('New article published to category "' + topic + '" : ' + data.title);
 				});
 			};
@@ -69,7 +77,12 @@
 
 		form.addEventListener('submit', (e) => {
 			e.preventDefault();
-			
+			if (conn && room) {
+				let data = {name: form.name.value, message: form.msg.value};
+				conn.publish(room, data);
+			} else {
+				alert('Selecione uma sala!');
+			}
 		});
 	</script>
 </body>

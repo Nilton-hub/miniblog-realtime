@@ -18,26 +18,25 @@ class Pusher implements WampServerInterface
 	}
 
 	/**
-	 *
+	 * @var ConnectionInterface $conn
+	 * @return void
 	 */
     public function onSubscribe(ConnectionInterface $conn, $topic)
 	{
 		// $this->changeOutput(__METHOD__, "Nova inscrição estabelecida #{$topic->getId()}", [$conn, $topic]);
 		$this->subscribedTopics[$topic->getId()] = $topic;
 		$this->subscribers->attach($conn);
-		foreach ($topic->getIterator() as $key => $value) {
-			var_dump(
-				get_class_methods($value),
-				$value->callResult($topic->getId()),
-				$value->event($topic->getId(), json_encode(['name' => 'Nilton', 'role' => 'developer'])),
-			);
-		}
     }
 
-	public function onBlogEntry($entry) {
+	/**
+	 * @var string $entry
+	 * @return void
+	 */
+	public function onBlogEntry($entry)
+	{
         $entryData = json_decode($entry, true);
 
-        // Se o objeto do tópico de pesquisa não estiver definido, não haverá ninguém para quem publicar
+		// Se o objeto do tópico de pesquisa não estiver definido, não haverá ninguém para quem publicar
         if (!array_key_exists($entryData['category'], $this->subscribedTopics)) {
 			$this->changeOutput(__METHOD__, "Error ao assinar o canal", [$entry]);
             return;
@@ -54,7 +53,10 @@ class Pusher implements WampServerInterface
 	 */
     public function onUnSubscribe(ConnectionInterface $conn, $topic)
 	{
-		//$this->changeOutput(__METHOD__, "Assinatura do tópico cancelada #{$topic->getId()}", [$conn, $topic]);
+		$this->changeOutput(__METHOD__, "Assinatura do tópico cancelada #{$topic->getId()}", [$conn, $topic]);
+		unset($this->subscribedTopics[$topic->getId()]);
+		$this->subscribers->detach($conn);
+		$conn->close();
     }
 
 	/**
@@ -70,7 +72,7 @@ class Pusher implements WampServerInterface
 	 */
     public function onClose(ConnectionInterface $conn)
 	{
-		//$this->changeOutput(__METHOD__, "Conexão encerrada", [$conn]);
+		$this->changeOutput(__METHOD__, "Conexão encerrada", [$conn]);
     }
 
 	/**
@@ -93,16 +95,13 @@ class Pusher implements WampServerInterface
 	//function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible);
     public function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible)
 	{
-
-		$this->changeOutput(__METHOD__, "Nova publicação", [$conn, $topic, $event, $exclude, $eligible]);
-		// var_dump($topic->getSubscribers());
         // In this application if clients send data it's because the user hacked around in console
 		$topic->broadcast(json_encode($event)); # envia a mensagem para o cliente
         //$conn->close();
     }
 
 	/**
-	 *
+	 * 
 	 */
     public function onError(ConnectionInterface $conn, \Exception $e) {
     }
