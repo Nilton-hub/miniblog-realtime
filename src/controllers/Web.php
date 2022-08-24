@@ -60,7 +60,6 @@ class Web extends Controller
 				header('Location: http://localhost:80/login');
 				exit;
 			}
-			return;
 		}
 		$message = null;
 		if (isset($_SESSION['message'])) {

@@ -60,7 +60,7 @@ class App extends Controller
 		}
 		if ($post) {
 			try {
-				$stmt = src\core\Connect::getConn()->prepare('INSERT INTO articles (title, content) VALUES(:t, :c)');
+				$stmt = \src\core\Connect::getConn()->prepare('INSERT INTO articles (title, content) VALUES(:t, :c)');
 				$stmt->bindValue('t', $post['title']);
 				$stmt->bindValue('c', $post['text']);
 				$stmt->execute();
