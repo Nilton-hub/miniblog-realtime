@@ -6,7 +6,8 @@ use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\WampServerInterface;
 use \SplObjectStorage;
 
-class Pusher implements WampServerInterface {
+class Pusher implements WampServerInterface
+{
 	protected array $subscribedTopics;
 	protected SplObjectStorage $subscribers;
 	
@@ -21,9 +22,16 @@ class Pusher implements WampServerInterface {
 	 */
     public function onSubscribe(ConnectionInterface $conn, $topic)
 	{
-		//$this->changeOutput(__METHOD__, "Nova inscrição estabelecida #{$topic->getId()}", [$conn, $topic]);
+		// $this->changeOutput(__METHOD__, "Nova inscrição estabelecida #{$topic->getId()}", [$conn, $topic]);
 		$this->subscribedTopics[$topic->getId()] = $topic;
 		$this->subscribers->attach($conn);
+		foreach ($topic->getIterator() as $key => $value) {
+			var_dump(
+				get_class_methods($value),
+				$value->callResult($topic->getId()),
+				$value->event($topic->getId(), json_encode(['name' => 'Nilton', 'role' => 'developer'])),
+			);
+		}
     }
 
 	public function onBlogEntry($entry) {
@@ -76,9 +84,9 @@ class Pusher implements WampServerInterface {
     }
 
 	/**
-	 * @var ConnectionInterface $conn
-	 * @var $topic Canal ws em da onde veio a requisição (obj com o método toString())
-	 * @var array $event contém o corpo da mensagem
+	 * @var ConnectionInterface $conn (Ratchet\Wamp\WampConnection)
+	 * @var \Ratchet\Wamp\Topic $topic Canal ws em da onde veio a requisição (obj com o método toString())
+	 * @var string $event contém o corpo da mensagem
 	 * @var array $exclude
 	 * @var array $eligible
 	 */

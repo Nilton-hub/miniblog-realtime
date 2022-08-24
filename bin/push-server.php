@@ -29,7 +29,7 @@ $options = [
  // "so_broadcast" => true,// Permite enviar e receber dados de/para endereços de broadcast.
  // tcp_nodelay => false // Definir esta opção para truedefinirá SOL_TCP,NO_DELAY=1 adequadamente, desativando assim o algoritmo TCP Nagle.
 ];
-$webSock = new React\Socket\SocketServer('127.0.0.1:8080', ['tcp' => $options], $loop);  // Binding to 0.0.0.0 means remotes can connect
+$webSocket = new React\Socket\SocketServer('127.0.0.1:8080', ['tcp' => $options], $loop);  // Binding to 0.0.0.0 means remotes can connect
 // $webSock->on('connection', function (React\Socket\ConnectionInterface $connection) {
 //     echo 'Plaintext connection from ' . $connection->getRemoteAddress() . PHP_EOL;
 
@@ -44,7 +44,7 @@ $webServer = new Ratchet\Server\IoServer(
 			)
 		)
 	),
-	$webSock
+	$webSocket
 );
 
 $loop->run();
