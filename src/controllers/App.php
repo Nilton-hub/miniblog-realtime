@@ -21,17 +21,22 @@ class App extends Controller
 	public function articles(): void
 	{
 		try {
+			// all articles
 			$stmt = \src\core\Connect::getConn()->query('SELECT a.id, a.user_id, a.title, a.content FROM articles AS a');
 			$articles = $stmt->fetchAll();
+			// comments
 			$stmt = \src\core\Connect::getConn()->query('
 				SELECT c.id, c.user_id, c.article_id, c.text, u.name FROM comments AS c JOIN users AS u ON u.id = c.user_id
 			');
 			$comments = $stmt->fetchAll();
-			// var_dump($comments);
+			// user articles
+			$allArticles = \src\core\Connect::getConn()->query('SELECT id, title FROM articles')->fetchAll();
+			// var_dump($allArticles);
 			parent::render('articles', [
 				'title' => 'Artigos',
 				'articles' => $articles,
 				'comments' => $comments,
+				'allArticles' => $allArticles,
 				'styles' => file_get_contents($this->getDir() . "partials/articles-css.php")
 			]);
 		} catch (\PDOException $e) {
@@ -46,6 +51,9 @@ class App extends Controller
 	{
 		$post = filter_input_array(INPUT_POST);
 		if (in_array('', $post)) {
+			$_SESSION['message'] = 'Você precisa preencher todos os campos para publicar um artigo.';
+			header('HTTP/1.1 303 See Other');
+			header('Location: http://localhost:80/login');
 			return;
 		}
 		if ($post) {

@@ -30,7 +30,7 @@ class Notification implements WampServerInterface
 
 	/**
 	 * A request to subscribe to a topic has been made
-	 *
+     * 
 	 * @param ConnectionInterface $conn
 	 * @param \Ratchet\Wamp\Topic|string $topic The topic to subscribe to
 	 * @return mixed
@@ -57,7 +57,7 @@ class Notification implements WampServerInterface
         // reenviar os dados para todos os clientes inscritos nessa categoria
         $topic->broadcast($entryData);
     }
-	
+
 	/**
 	 * Uma solicitação para cancelar a inscrição de um tópico foi feita
 	 *
@@ -69,7 +69,7 @@ class Notification implements WampServerInterface
 	function onUnSubscribe(ConnectionInterface $conn, $topic): void
     {
 	}
-	
+
 	/**
 	 * Um cliente está tentando publicar conteúdo em conexões assinadas em um URI
 	 *
@@ -84,36 +84,33 @@ class Notification implements WampServerInterface
 	function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible): void
     {
 	}
-	
+
 	/**
 	 * Quando uma nova conexão for aberta ela será passada para este método
 	 *
 	 * @param ConnectionInterface $conn O soquete/conexão que acabou de se conectar ao seu aplicativo
-	 *
 	 * @return mixed
 	 */
 	function onOpen(ConnectionInterface $conn): void
     {
 	}
-	
+
 	/**
 	 * Isso é chamado antes ou depois de um soquete ser fechado (depende de como ele é fechado). Enviar mensagem para $conn não resultará em erro se já tiver sido fechado.
 	 *
 	 * @param ConnectionInterface $conn A socket/conexão que está fechando/fechada
-	 *
 	 * @return mixed
 	 */
 	function onClose(ConnectionInterface $conn): void
     {
 	}
-	
+
 	/**
 	 * Se houver um erro com um dos soquetes ou em algum lugar no aplicativo onde uma exceção é lançada,
 	 * a exceção é enviada de volta para a pilha, manipulada pelo servidor e retornada ao aplicativo por meio desse método
 	 *
 	 * @param ConnectionInterface $conn
 	 * @param \Exception $e
-	 *
 	 * @return mixed
 	 */
 	function onError(ConnectionInterface $conn, \Exception $e): void

@@ -3,7 +3,8 @@
 		margin: 0 auto;
 	}
 	main {
-		height: 100vh;
+		height: calc(100vh - 75px);
+;
 	}
 	main div:last-child {
 		margin-left: 10px;

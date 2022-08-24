@@ -71,13 +71,43 @@ div.message button {
 }
 
 nav {
-	display: block;
+	display: inline-block;
 	position: relative;
 	height: 75px;
+	width: calc(100% - 80px);
+	margin-left: auto;
 }
 
 #toggle-menu {
 	display: none;
+}
+
+.notify-btn {
+	display: inline-block;
+	margin: 10px;
+	position: relative;
+}
+
+.notify-border {
+	overflow: hidden;
+	border-radius: 50%;
+	border: 2px solid red;
+	display: inline-block;
+}
+
+.notify-count:not(:empty) {
+	background-color: red;
+	position: absolute;
+	right: -8px;
+	display: inline-block;
+	width: 25px;
+	height: 25px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	color: #e9e9ed;
+	font-size: 0.8rem;
 }
 
 nav ul {
@@ -101,6 +131,10 @@ main {
 	display: flex;
 	justify-content: center;
 	gap: 10px;
+}
+
+.content {
+	transform: translate(0, -75px);
 }
 
 form input {
@@ -142,6 +176,9 @@ tr.pdt-list:nth-child(odd) {
 }
 
 @media (max-width: 750px) {
+	header { 
+		height: 65px;
+	}
 	main {
 		padding: 0;
 		margin: 0;
@@ -150,10 +187,11 @@ tr.pdt-list:nth-child(odd) {
 		justify-content: flex-end;
 	}
 	nav {
-		min-height: initial;
+		height: 0;
 		border-bottom: 1px solid rgba(100, 100, 100, 0.5);
 		padding: 0;
-		margin: 0;
+		display: block;
+		margin: 0 auto;
 	}
 	nav::after {
 		content: '';
@@ -167,21 +205,27 @@ tr.pdt-list:nth-child(odd) {
 	}
 	nav ul {
 		display: block;
-		position: static;
-		margin: 22px 0 0 auto;
-		width: 50%;
+		position: relative;
+		margin: 0 0 0 auto;
+		width: 65vw !important;
 		height: 100vh;
-		transform: translate(100%, 0);
+		transform: translate(150%, 0);
 		background: #ccc;
 		overflow-x: hidden;
 		transition: transform 0.3s linear 0s;
+		z-index: 5;
 	}
 	nav ul.active {
-		transform: translate(0, 0);
+		transform: translate(40%, 0);
 	}
 	nav li {
 		display: block;
 		margin: 15px 0;
+	}
+
+	.content:first-child {
+		margin-top: 120px;
+		z-index: 1;
 	}
 	main form input {
 		display: inline-block;
