@@ -2,6 +2,8 @@
 
 namespace src\controllers;
 
+use PDOException;
+
 class App extends Controller
 {
 	public function __construct()
@@ -76,6 +78,11 @@ class App extends Controller
 	{
 		$comment = filter_input(INPUT_POST, 'comment');
 		$articleId = filter_input(INPUT_POST, 'article_id');
+		if (!$comment || !$articleId) {
+			$_SESSION['message'] = 'Digite um comentário antes de enviar.';
+			header('HTTP/1.1 303 See Other');
+			header('Location: http://localhost:80/login');
+		}
 		if ($comment) {
 			$stmt = \src\core\Connect::getConn()
 				->prepare('INSERT INTO comments (user_id, article_id, text) VALUES (:uid, :aid, :t)');
@@ -90,7 +97,7 @@ class App extends Controller
 			// logica para notificar os usuários
 		}
 	}
-	
+
 	/**
 	 * @return void
 	 */

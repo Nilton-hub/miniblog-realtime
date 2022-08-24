@@ -1,5 +1,3 @@
-
-
 const form = document.querySelector('form'),
 	  table = document.querySelector('table'),
 	  ws = new WebSocket('ws://localhost:3000/'),

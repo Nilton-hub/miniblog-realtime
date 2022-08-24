@@ -110,6 +110,27 @@ nav {
 	font-size: 0.8rem;
 }
 
+.notifications {
+	width: 0;
+	height: calc(100vh - 80px);
+	background-color: #cecece;
+	position: fixed;
+	left: 0;
+	overflow-y: auto;
+	overflow-x: hidden;
+	transition: width .3s linear;
+}
+
+.notifications.active {
+	width: 32%;
+}
+
+div.notify {
+	border-bottom: 1px solid rgba(100, 100, 100, 0.5);
+	background-color: skyblue;
+	padding: 5px;
+}
+
 nav ul {
 	display: flex;
 	align-items: center;
@@ -222,7 +243,12 @@ tr.pdt-list:nth-child(odd) {
 		display: block;
 		margin: 15px 0;
 	}
-
+	.notifications {
+		width: 0;
+	}
+	.notifications.active {
+		width: 100%;
+	}
 	.content:first-child {
 		margin-top: 120px;
 		z-index: 1;

@@ -10,12 +10,14 @@
 	</head>
 	<body>
 	<header>
+	<?php if (isset($_SESSION['user'])) : ?>
 		<a href="#" title="notify" class="notify-btn">
 			<span class="notify-count"></span>
 			<span class="notify-border">
 				<img src="http://localhost/views/assets/images/notify.jpg" width="40" alt="">
 			</span>
 		</a>
+	<?php endif; ?>
 		<button id="toggle-menu">MENU</button>
 		<nav class="main-nav">
 			<ul>
@@ -34,6 +36,7 @@
 			</ul>
 		</nav>
 	</header>
+	<div class="notifications"><div></div></div>
 	<?php
 	echo (isset($_SESSION['message']) ?
 		'<div class="message">
