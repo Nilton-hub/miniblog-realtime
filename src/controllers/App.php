@@ -84,12 +84,14 @@ class App extends Controller
 			header('Location: http://localhost:80/login');
 		}
 		if ($comment) {
+			/*
 			$stmt = \src\core\Connect::getConn()
 				->prepare('INSERT INTO comments (user_id, article_id, text) VALUES (:uid, :aid, :t)');
 			$stmt->bindValue('uid', $_SESSION['user']->id);
 			$stmt->bindValue('aid', $articleId);
 			$stmt->bindValue('t', $comment);
 			$stmt->execute();
+			*/
 			echo json_encode([
 				'text' => $comment,
 				'username' => $_SESSION['user']->name

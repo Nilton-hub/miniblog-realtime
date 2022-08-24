@@ -26,6 +26,7 @@ class Notification implements WampServerInterface
 	 */
 	function onCall(ConnectionInterface $conn, $id, $topic, array $params): void
     {
+		echo "Nova chamada" . PHP_EOL;
 	}
 
 	/**
@@ -37,6 +38,7 @@ class Notification implements WampServerInterface
 	 */
 	function onSubscribe(ConnectionInterface $conn, $topic): void
     {
+		echo "Nova conexão aceita" . PHP_EOL;
         $this->subscribedTopics[$topic->getId()] = $topic;
 	}
 
@@ -46,7 +48,7 @@ class Notification implements WampServerInterface
     public function onBlogEntry($entry): void
     {
         $entryData = json_decode($entry, true);
-
+		echo "Nova mensagem" . PHP_EOL;
         // Se o objeto do tópico de pesquisa não estiver definido, não haverá ninguém para quem publicar
         if (!array_key_exists($entryData['category'], $this->subscribedTopics)) {
             return;
@@ -75,7 +77,7 @@ class Notification implements WampServerInterface
 	 *
 	 * @param ConnectionInterface $conn
 	 * @param \Ratchet\Wamp\Topic|string $topic O tópico no qual o usuário tentou publicar
-	 * @param string $event Carga útil da publicação
+	 * @param string $event Carga útil da publicação (O texto da mensagem)
 	 * @param array $exclude Uma lista de IDs de sessão da qual a mensagem deve ser excluída (lista negra)
 	 * @param array $eligible Uma lista de IDs de sessão para a qual a mensagem deve ser enviada (lista branca)
 	 *
@@ -83,6 +85,9 @@ class Notification implements WampServerInterface
 	 */
 	function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible): void
     {
+		echo "Nova publicação" . PHP_EOL;
+		// public function broadcast($msg, array $exclude = array(), array $eligible = array())
+		$topic->broadcast($event, $exclude, $eligible);
 	}
 
 	/**

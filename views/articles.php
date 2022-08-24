@@ -43,7 +43,7 @@
 					if (isset($comments)):
 						foreach ($comments as $comment):
 							// logica para exibir os comentários
-							echo "<output style=\"display: block;\">
+							echo "<output style=\"display: block;\" id=\"{$comment->id}\">
 									<strong>{$comment->name}: </strong><span>{$comment->text}</span>
 								</output>";
 						endforeach;
@@ -68,19 +68,18 @@
 <script src="http://localhost/views/assets/js/articles.js"></script>
 <script>
 	let conn;
-	const publish = () => {
-		<?php foreach ($allArticles as $article):
-		$title = implode('_', explode(' ', $article->title)) . "_{$article->id}";
-		?>
+	const publish = function () {
+	<?php foreach ($allArticles as $article):
+		$title = implode('_', explode(' ', $article->title)) . "_{$article->id}"; ?>
+		console.log('<?= $title; ?>');
 		conn.subscribe('<?= $title; ?>', (topic, data) => {
-			
+			console.log(topic, data);
+			console.log('New article published to category "' + topic + '" : ' + data.title);
 		});
-		<?php
-		endforeach;
-		?>
+	<?php endforeach; ?>
 	};
-	const close = () => {
-		console.warn('WebSocket connection closed');
+	const close = function() {
+		console.warn('Conexão ao WebSocket encerrada.');
 	};
 
 	conn = new ab.Session('ws://127.0.0.1:8080',

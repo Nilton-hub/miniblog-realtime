@@ -21,6 +21,7 @@
 		let arrSort = [0, 1, 2, 0, 1, 2, 0, 1, 2, 1];
 		let rand = parseInt(Math.random() * 10);
 		rand = (arrSort[rand] !== 'undefined' ? rand * arrSort[rand] : rand);
+
 		for (let i = 0; i < rand; i++) {
 			notifyContainer.style = '';
 			fetch('http://localhost/views/assets/views-components/notify.php')
@@ -45,6 +46,7 @@
 
 		document.querySelector('.notify-btn').addEventListener('click', e => {
 			notifyContainer.classList.toggle('active');
+			document.querySelector('.notify-count').innerText = '';
 		});
 	</script>
 	</body>

@@ -1,3 +1,4 @@
+let ws;
 const commentComponnet = (id, data) => {
     let output = document.createElement('output');
     output.style.display = 'block';
@@ -24,8 +25,9 @@ const formsComment = document.querySelectorAll('form.form-comment'),
         })
             .then(res => res.json())
             .then(data => {
-
-                conn.publish();
+                let notifySender = {};
+                notifySender.username = 
+                ws.publish(form.title.value, form.comment.value);
                 commentComponnet(id, data);
             });
     };
@@ -33,10 +35,9 @@ const formsComment = document.querySelectorAll('form.form-comment'),
 formsComment.forEach((e) => {
     e.addEventListener('submit', postComment);
 });
-
-conn = new ab.Session('ws://localhost:8080',
+ws = new ab.Session('ws://localhost:8080',
     function() {
-        conn.subscribe('kittensCategory', function(topic, data) {
+        ws.subscribe('kittensCategory', function(topic, data) {
             // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
             console.log('New article published to category "' + topic + '" : ' + data.title);
         });
