@@ -16,6 +16,7 @@
 		}
 
 		// NOTIFICATIONS
+		/*
 		const notifications = document.querySelector('.notifications div');
 		const notifyContainer = notifications.parentElement;
 		let arrSort = [0, 1, 2, 0, 1, 2, 0, 1, 2, 1];
@@ -43,7 +44,7 @@
 			notifyContainer.style.justifyContent = 'center';
 			notifications.innerHTML = '<h3 style="color: gray;">Você não tem novas notificações</h3>';
 		}
-
+		*/
 		document.querySelector('.notify-btn').addEventListener('click', e => {
 			notifyContainer.classList.toggle('active');
 			document.querySelector('.notify-count').innerText = '';

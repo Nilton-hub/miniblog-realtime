@@ -73,6 +73,7 @@
 		$title = implode('_', explode(' ', $article->title)) . "_{$article->id}"; ?>
 		console.log('<?= $title; ?>');
 		conn.subscribe('<?= $title; ?>', (topic, data) => {
+			data = JSON.parse(data);
 			console.log(topic, data);
 			console.log('New article published to category "' + topic + '" : ' + data.title);
 		});

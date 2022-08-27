@@ -4,7 +4,7 @@ const commentComponnet = (id, data) => {
     output.style.display = 'block';
     let user = document.createElement('strong');
     let comment = document.createElement('span');
-    
+
     user.innerHTML = data.username + ": ";
     comment.innerHTML = data.text;
     output.append(user, comment);
@@ -19,15 +19,14 @@ const formsComment = document.querySelectorAll('form.form-comment'),
         const form = e.target;
         const id = form.article_id.value;
         const formData = new FormData(form);
+        console.log(form.action);
         fetch(`${form.action}`, {
             method: form.method,
             body: formData
         })
             .then(res => res.json())
             .then(data => {
-                let notifySender = {};
-                notifySender.username = 
-                ws.publish(form.title.value, form.comment.value);
+                ws.publish(form.title.value, JSON.stringify(data));
                 commentComponnet(id, data);
             });
     };
@@ -38,8 +37,11 @@ formsComment.forEach((e) => {
 ws = new ab.Session('ws://localhost:8080',
     function() {
         ws.subscribe('kittensCategory', function(topic, data) {
-            // This is where you would add the new article to the DOM (beyond the scope of this tutorial)
-            console.log('New article published to category "' + topic + '" : ' + data.title);
+            fetch('http://localhost/views/assets/views-components/notify.php')
+                .then(res => res.text())
+                .then(data => {
+                    
+                });
         });
     },
     function() {
