@@ -13,9 +13,17 @@
 	* content - text
 
 3) COMMENTS
-	* id - integer, priary key [pk]
+	* id - integer, [pk]
 	* user_id - integer [fk]
 	* article_id - integer [fk]
 	* text - text
+
+4) NOTIFICATIONS
+	* id - integer, [pk]
+	* user_id integer [fk]
+	* article_id integer [pk]
+	* text - text
+	* opened - even(1, 0)
+	* created_at
 
 CREATE TABLE IF NOT EXISTS comments (id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, article_id INTEGER NOT NULL, text TEXT NOT NULL, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE NO ACTION, FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE ON UPDATE NO ACTION)

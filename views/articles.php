@@ -1,7 +1,7 @@
 <header style="display: block; width: 90%">
 	<h1>Artigos</h1><hr>
 </header>
-<main>
+<main style="margin-bottom: 5em;">
 	<form method="POST" action="http://localhost/artigos">
 		<div>
 			<label>
@@ -52,7 +52,7 @@
 					$title = implode('_', explode(' ', $article->title)) . "_{$article->id}";
 					echo <<<FORM
 							<form method="POST" action="http://localhost/comentario-atigos" style="display: flex; margin-top: 15px;" class="form-comment">
-								<input type="text" name="comment" placeholder="Digite um comentário">
+								<input type="text" name="comment" value="Digite um comentário"> <!-- placeholder -->
 								<input type="hidden" name="article_id" value="{$article->id}">
 								<input type="hidden" name="title" value="{$title}">
 								<button>enviar</button>
@@ -68,14 +68,26 @@
 <script src="http://localhost/views/assets/js/articles.js"></script>
 <script>
 	let conn;
+	let notificationsDiv;
+	let notificationsContainer;
+
 	const publish = function () {
 	<?php foreach ($allArticles as $article):
 		$title = implode('_', explode(' ', $article->title)) . "_{$article->id}"; ?>
-		console.log('<?= $title; ?>');
+		// console.log('<?= $title; ?>');
 		conn.subscribe('<?= $title; ?>', (topic, data) => {
 			data = JSON.parse(data);
-			console.log(topic, data);
-			console.log('New article published to category "' + topic + '" : ' + data.title);
+			console.log(data);
+			fetch('http://localhost/views/assets/views-components/notify.php')
+				.then(res => res.text())
+				.then(dataRes => {
+					notificationsDiv = document.querySelector('.notifications div');
+					notificationsContainer = notifications.parentElement;
+					dataRes = dataRes.replace('{{username}}', data.username);
+					dataRes = dataRes.replace('{{comment}}', data.text);
+					notificationsDiv.innerHTML = dataRes + notificationsDiv.innerHTML;
+				})
+				.catch(err => { console.error(err); });
 		});
 	<?php endforeach; ?>
 	};

@@ -38,7 +38,6 @@ class Notification implements WampServerInterface
 	 */
 	function onSubscribe(ConnectionInterface $conn, $topic): void
     {
-		echo "Nova conexão aceita" . PHP_EOL;
         $this->subscribedTopics[$topic->getId()] = $topic;
 	}
 
@@ -48,13 +47,13 @@ class Notification implements WampServerInterface
     public function onBlogEntry($entry): void
     {
         $entryData = json_decode($entry, true);
-		echo "Nova mensagem" . PHP_EOL;
+		echo $entry . ' - ' . __METHOD__ . ' - ' . __LINE__ . PHP_EOL;
         // Se o objeto do tópico de pesquisa não estiver definido, não haverá ninguém para quem publicar
-        if (!array_key_exists($entryData['category'], $this->subscribedTopics)) {
+        if (!array_key_exists($entryData['topic'], $this->subscribedTopics)) {
             return;
         }
 
-        $topic = $this->subscribedTopics[$entryData['category']];
+        $topic = $this->subscribedTopics[$entryData['topic']];
 
         // reenviar os dados para todos os clientes inscritos nessa categoria
         $topic->broadcast($entryData);
@@ -85,7 +84,6 @@ class Notification implements WampServerInterface
 	 */
 	function onPublish(ConnectionInterface $conn, $topic, $event, array $exclude, array $eligible): void
     {
-		echo "Nova publicação" . PHP_EOL;
 		// public function broadcast($msg, array $exclude = array(), array $eligible = array())
 		$topic->broadcast($event, $exclude, $eligible);
 	}

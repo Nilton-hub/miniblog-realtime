@@ -78,11 +78,11 @@ class App extends Controller
 	{
 		$comment = filter_input(INPUT_POST, 'comment');
 		$articleId = filter_input(INPUT_POST, 'article_id');
-		/*if (!$comment || !$articleId) {
+		if (!$comment || !$articleId) {
 			$_SESSION['message'] = 'Digite um comentário antes de enviar.';
 			header('HTTP/1.1 303 See Other');
 			header('Location: http://localhost:80/login');
-		}*/
+		}
 		if ($comment) {
 			/*
 			$stmt = \src\core\Connect::getConn()
@@ -100,10 +100,9 @@ class App extends Controller
 			echo json_encode([
 				'text' => $comment,
 				'username' => $_SESSION['user']->name,
-				'title' => $title,
+				'topic' => $title,
 				'article_id' => $articleId
 			]);
-			// logica para notificar os usuários
 		}
 	}
 
