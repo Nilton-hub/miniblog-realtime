@@ -1,23 +1,26 @@
 const form = document.querySelector('form'),
 	  table = document.querySelector('table'),
-	  ws = new WebSocket('ws://localhost:3000/'),
 	  realForamter = (num) => {
 		let formater = Intl.NumberFormat('pt-BR', {
 			style: 'currency',
 			currency: 'BRL'
 		});
 		return formater.format(num.replace(',', '.'));
-	}
+	};
 
-//ws.addEventListener('open', (e) => {});
-
-ws.addEventListener('message', (e) => {
-	data = JSON.parse(e.data);
-	const price = realForamter(data.price);
-	table.innerHTML += `<tr class="pdt-list">
-							<td></td><td>${data.name}</td><td>${price}</td>
-						</tr>`;
-});
+try {
+	const ws = new WebSocket('ws://localhost:3000/')	
+	ws.addEventListener('message', (e) => {
+		data = JSON.parse(e.data);
+		const price = realForamter(data.price);
+		table.innerHTML += `<tr class="pdt-list">
+								<td></td><td>${data.name}</td><td>${price}</td>
+							</tr>`;
+	});
+	//ws.addEventListener('open', (e) => {});
+} catch (error) {
+	console.error('Nenhuma conexão websocket disponível na porta 3000.');
+}
 
 form.addEventListener('submit', (e) => {
 	e.preventDefault();
@@ -28,7 +31,9 @@ form.addEventListener('submit', (e) => {
 	})
 		.then(data => data.text() )
 		.then(res => {
-			//ws.send(res);
+			if (ws) {
+				ws.send(res);
+			}
 			const price = realForamter(form.price.value);
 			table.innerHTML += `<tr class="pdt-list">
 							<td></td><td>${form.name.value}</td><td>${price}</td>

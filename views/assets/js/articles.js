@@ -25,6 +25,11 @@ const formsComment = document.querySelectorAll('form.form-comment'),
         })
             .then(res => res.json())
             .then(data => {
+                let cookies = document.cookie.split(';');
+                data.login = cookies.filter(e => (e.split('=')[0]) === 'login' || (e.split('=')[0]) === ' login')[0]
+                    .replace('login=', '')
+                    .replace(' ', '');
+
                 ws.publish(form.title.value, JSON.stringify(data));
                 commentComponnet(id, data);
             });

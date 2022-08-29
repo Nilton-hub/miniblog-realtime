@@ -52,6 +52,8 @@ class Web extends Controller
 					'email' => $user->email,
 					'name' => $user->name
 				];
+				$secure = (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] ? true : false);
+				setcookie('login', http_build_query($_SESSION['user']), strtotime("+86400seconds"), '/', 'localhost', $secure, false);
 				header('HTTP/1.1 303 See Other');
 				header('Location: http://localhost:80/artigos');
 				exit;
@@ -81,6 +83,9 @@ class Web extends Controller
 	{
 		session_unset();
 		session_destroy();
+		setcookie('login', null, strtotime("-86400seconds"), '/', 'localhost', $secure, false, [
+			'samesite' => 'Lax'
+		]);
 		header('HTTP/1.1 303 See Other');
 		header('Location: http://localhost');
 	}

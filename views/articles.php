@@ -1,7 +1,6 @@
 <header style="display: block; width: 90%">
 	<h1>Artigos</h1><hr>
 </header>
-
 <main style="margin-bottom: 5em;">
 	<form method="POST" action="http://localhost/artigos">
 		<div>
@@ -86,12 +85,17 @@
 					dataRes = dataRes.replace('{{username}}', data.username);
 					dataRes = dataRes.replace('{{comment}}', data.text);
 					notificationsDiv.innerHTML = dataRes + notificationsDiv.innerHTML;
-					
-					let notificationsCount = document.querySelector('.notify-count');
-					totNotifies = notificationsCount.innerText.length;
-					totNotifies = (totNotifies > 0 ? notificationsCount.innerText : 0);
-					totNotifies = parseInt(totNotifies);
-					notificationsCount.innerText = totNotifies + 1;
+					let login = document.cookie.split(';');
+					login = login.filter(e => e.split('=')[0] === 'login' || e.split('=')[0] === ' login')[0]
+						.replace(' ', '')
+						.replace('login=', '');
+					if (data.login !== login) {
+						let notificationsCount = document.querySelector('.notify-count');
+						totNotifies = notificationsCount.innerText.length;
+						totNotifies = (totNotifies > 0 ? notificationsCount.innerText : 0);
+						totNotifies = parseInt(totNotifies);
+						notificationsCount.innerText = totNotifies + 1;
+					}
 				})
 				.catch(err => { console.error(err); });
 		});
