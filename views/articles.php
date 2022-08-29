@@ -42,10 +42,11 @@
 					echo PHP_EOL . "<div id=\"comments-{$article->id}\">";
 					if (isset($comments)):
 						foreach ($comments as $comment):
-							// logica para exibir os comentários
-							echo "<output style=\"display: block;\" id=\"{$comment->id}\">
-									<strong>{$comment->name}: </strong><span>{$comment->text}</span>
-								</output>";
+							if ($comment->article_id === $article->id):
+								echo "<output style=\"display: block;\" id=\"{$comment->id}\">
+										<strong>{$comment->name}: </strong><span>{$comment->text}</span>
+									</output>";
+							endif;
 						endforeach;
 					endif;
 					echo "</div>";

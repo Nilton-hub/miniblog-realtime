@@ -19,7 +19,7 @@ class App extends Controller
 			exit;
 		}
 		parent::addData('notifications', Connect::getConn()
-			->query('SELECT nt.text, u.name, nt.created_at FROM notifications AS nt JOIN users AS u ON (nt.user_id = u.id) ORDER BY nt.created_at DESC')
+			->query("SELECT nt.text, u.name, nt.created_at FROM notifications AS nt JOIN users AS u ON (nt.user_id = u.id) WHERE user_id = {$_SESSION['user']->id} ORDER BY nt.created_at DESC")
 			->fetchAll());
 		parent::addData('totalNotifications', Connect::getConn()
 			->query("SELECT COUNT(id) AS totalNotifications FROM notifications WHERE user_id = {$_SESSION['user']->id} AND opened = 0")->fetch());
@@ -41,7 +41,7 @@ class App extends Controller
 			$comments = $stmt->fetchAll();
 			// user articles
 			$allArticles = Connect::getConn()->query('SELECT id, title FROM articles WHERE user_id = ' . $_SESSION['user']->id)->fetchAll();
-			// var_dump($allArticles);
+			// var_dump($allArticles, $_SESSION['user']->id);
 			parent::render('articles', [
 				'title' => 'Artigos',
 				'articles' => $articles,
@@ -68,9 +68,10 @@ class App extends Controller
 		}
 		if ($post) {
 			try {
-				$stmt = Connect::getConn()->prepare('INSERT INTO articles (title, content) VALUES(:t, :c)');
+				$stmt = Connect::getConn()->prepare('INSERT INTO articles (title, content, user_id) VALUES(:t, :c, :uid)');
 				$stmt->bindValue('t', $post['title']);
 				$stmt->bindValue('c', $post['text']);
+				$stmt->bindValue('uid', $_SESSION['user']->id);
 				$stmt->execute();
 				echo "<h2>Cadastro realizado com sucesso!</h2>";
 			} catch (PDOException $e) {
@@ -78,7 +79,7 @@ class App extends Controller
 			}
 		}
 	}
-
+ 
 	/**
 	 * @return void
 	 */
@@ -93,24 +94,22 @@ class App extends Controller
 		}
 		if ($comment) {
 			// insert comments
-			/*
 			$connect = Connect::getConn();
-			$connect->prepare('INSERT INTO comments (user_id, article_id, text) VALUES (:uid, :aid, :t)');
+			$stmt = $connect->prepare('INSERT INTO comments (user_id, article_id, text) VALUES (:uid, :aid, :t)');
 			$stmt->bindValue('uid', $_SESSION['user']->id);
 			$stmt->bindValue('aid', $articleId);
 			$stmt->bindValue('t', $comment);
 			$stmt->execute();
 			// insert notifications
 			$stmt = $connect->prepare('INSERT INTO notifications (user_id, article_id, text, opened, created_at) VALUES (:uid, :aid, :t, :o, :create)');
-			$stmt->bindValue('uid', $_SESSION['user']->id);
+			$stmt->bindValue('uid', $connect->query('SELECT user_id FROM articles WHERE id = ' . $articleId)->fetch()->user_id);
 			$stmt->bindValue('aid', $articleId);
 			$stmt->bindValue('t', $comment);
 			$stmt->bindValue('o', 0);
 			$stmt->bindValue('create', (new DateTimeImmutable())->format('Y-m-d H:i'));
 			$stmt->execute();
-			*/
 			// select articles
-			$stmt = Connect::getConn()->prepare('SELECT id, title FROM articles WHERE id = ?');
+			$stmt = $connect->prepare('SELECT id, title FROM articles WHERE id = ?');
 			$stmt->bindValue(1, $articleId);
 			$stmt->execute();
 			$title = implode('_', explode(' ', $stmt->fetch()->title)) . "_{$articleId}";
