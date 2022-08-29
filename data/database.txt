@@ -21,6 +21,7 @@
 4) NOTIFICATIONS
 	* id - integer, [pk]
 	* user_id integer [fk]
+	* user_comment_id integer [fk]
 	* article_id integer [pk]
 	* text - text
 	* opened - even(1, 0)

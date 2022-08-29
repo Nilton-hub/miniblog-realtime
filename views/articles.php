@@ -53,7 +53,7 @@
 					$title = implode('_', explode(' ', $article->title)) . "_{$article->id}";
 					echo <<<FORM
 							<form method="POST" action="http://localhost/comentario-atigos" style="display: flex; margin-top: 15px;" class="form-comment">
-								<input type="text" name="comment" value="Digite um comentário"> <!-- placeholder -->
+								<input type="text" name="comment" placeholder="Digite um comentário"> <!-- placeholder -->
 								<input type="hidden" name="article_id" value="{$article->id}">
 								<input type="hidden" name="title" value="{$title}">
 								<button>enviar</button>

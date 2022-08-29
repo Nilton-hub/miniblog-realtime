@@ -43,7 +43,7 @@
 			foreach ($notifications as $notification): ?>
 			<?php
 			$tpl = file_get_contents(__DIR__ . '/assets/views-components/notify.php');
-			echo str_replace(['{{username}}', '{{comment}}'], [$notification->name, $notification->text], $tpl);
+			echo str_replace(['{{username}}', '{{comment}}'], [$notification->user_comment_name, $notification->text], $tpl);
 			?>
 		<?php endforeach;
 		endif; ?>

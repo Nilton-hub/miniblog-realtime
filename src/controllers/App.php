@@ -19,7 +19,9 @@ class App extends Controller
 			exit;
 		}
 		parent::addData('notifications', Connect::getConn()
-			->query("SELECT nt.text, u.name, nt.created_at FROM notifications AS nt JOIN users AS u ON (nt.user_id = u.id) WHERE user_id = {$_SESSION['user']->id} ORDER BY nt.created_at DESC")
+			->query("SELECT nt.text, u.name, nt.user_comment_id,
+				(SELECT name FROM users WHERE id = nt.user_comment_id) AS user_comment_name,
+				nt.created_at FROM notifications AS nt JOIN users AS u ON (nt.user_id = u.id) WHERE user_id = {$_SESSION['user']->id} ORDER BY nt.created_at DESC")
 			->fetchAll());
 		parent::addData('totalNotifications', Connect::getConn()
 			->query("SELECT COUNT(id) AS totalNotifications FROM notifications WHERE user_id = {$_SESSION['user']->id} AND opened = 0")->fetch());
