@@ -103,8 +103,9 @@ class App extends Controller
 			$stmt->bindValue('t', $comment);
 			$stmt->execute();
 			// insert notifications
-			$stmt = $connect->prepare('INSERT INTO notifications (user_id, article_id, text, opened, created_at) VALUES (:uid, :aid, :t, :o, :create)');
+			$stmt = $connect->prepare('INSERT INTO notifications (user_id, user_comment_id, article_id, text, opened, created_at) VALUES (:uid, :ucid, :aid, :t, :o, :create)');
 			$stmt->bindValue('uid', $connect->query('SELECT user_id FROM articles WHERE id = ' . $articleId)->fetch()->user_id);
+			$stmt->bindValue('ucid', $_SESSION['user']->id);
 			$stmt->bindValue('aid', $articleId);
 			$stmt->bindValue('t', $comment);
 			$stmt->bindValue('o', 0);
