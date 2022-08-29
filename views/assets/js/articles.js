@@ -31,6 +31,19 @@ const formsComment = document.querySelectorAll('form.form-comment'),
             });
     };
 
+function clearNotifications(id) {
+    formData = new FormData();
+    formData.append('identifier', id);
+    fetch('http://localhost/open-notifies', {
+        method: 'POST',
+        body: formData
+    })
+        .then(res => res.text())
+        .catch(error => {
+            console.error(error);
+        });
+}
+
 formsComment.forEach((e) => {
     e.addEventListener('submit', postComment);
 });

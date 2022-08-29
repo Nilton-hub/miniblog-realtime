@@ -11,8 +11,9 @@
 	<body>
 	<header>
 	<?php if (isset($_SESSION['user'])) : ?>
-		<a href="#" title="notify" class="notify-btn">
-			<span class="notify-count"></span>
+		<a href="#" title="notify" class="notify-btn" onclick="clearNotifications(<?= $_SESSION['user']->id; ?>)">
+			<?php $ntfs = (isset($totalNotifications) ? $totalNotifications->totalNotifications : null); ?>
+			<span class="notify-count"><?= ($ntfs ? $ntfs : null); ?></span>
 			<span class="notify-border">
 				<img src="http://localhost/views/assets/images/notify.jpg" width="40" alt="">
 			</span>
@@ -36,7 +37,17 @@
 			</ul>
 		</nav>
 	</header>
-	<div class="notifications"><div></div></div>
+	<div class="notifications"><div>
+		
+		<?php if (isset($notifications)):
+			foreach ($notifications as $notification): ?>
+			<?php
+			$tpl = file_get_contents(__DIR__ . '/assets/views-components/notify.php');
+			echo str_replace(['{{username}}', '{{comment}}'], [$notification->name, $notification->text], $tpl);
+			?>
+		<?php endforeach;
+		endif; ?>
+	</div></div>
 	<?php
 	echo (isset($_SESSION['message']) ?
 		'<div class="message">

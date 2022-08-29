@@ -1,6 +1,7 @@
 <header style="display: block; width: 90%">
 	<h1>Artigos</h1><hr>
 </header>
+
 <main style="margin-bottom: 5em;">
 	<form method="POST" action="http://localhost/artigos">
 		<div>
@@ -77,7 +78,6 @@
 		// console.log('<?= $title; ?>');
 		conn.subscribe('<?= $title; ?>', (topic, data) => {
 			data = JSON.parse(data);
-			console.log(data);
 			fetch('http://localhost/views/assets/views-components/notify.php')
 				.then(res => res.text())
 				.then(dataRes => {
@@ -86,6 +86,12 @@
 					dataRes = dataRes.replace('{{username}}', data.username);
 					dataRes = dataRes.replace('{{comment}}', data.text);
 					notificationsDiv.innerHTML = dataRes + notificationsDiv.innerHTML;
+					
+					let notificationsCount = document.querySelector('.notify-count');
+					totNotifies = notificationsCount.innerText.length;
+					totNotifies = (totNotifies > 0 ? notificationsCount.innerText : 0);
+					totNotifies = parseInt(totNotifies);
+					notificationsCount.innerText = totNotifies + 1;
 				})
 				.catch(err => { console.error(err); });
 		});

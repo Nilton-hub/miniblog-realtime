@@ -3,6 +3,9 @@
 namespace src\controllers;
 
 use PDOException;
+use \src\core\Connect;
+use DateTimeImmutable;
+use DateTime;
 
 class App extends Controller
 {
@@ -15,6 +18,11 @@ class App extends Controller
 			header('Location: http://localhost:80/login');
 			exit;
 		}
+		parent::addData('notifications', Connect::getConn()
+			->query('SELECT nt.text, u.name, nt.created_at FROM notifications AS nt JOIN users AS u ON (nt.user_id = u.id) ORDER BY nt.created_at DESC')
+			->fetchAll());
+		parent::addData('totalNotifications', Connect::getConn()
+			->query("SELECT COUNT(id) AS totalNotifications FROM notifications WHERE user_id = {$_SESSION['user']->id} AND opened = 0")->fetch());
 	}
 
 	/**
@@ -24,15 +32,15 @@ class App extends Controller
 	{
 		try {
 			// all articles
-			$stmt = \src\core\Connect::getConn()->query('SELECT a.id, a.user_id, a.title, a.content FROM articles AS a');
+			$stmt = Connect::getConn()->query('SELECT a.id, a.user_id, a.title, a.content FROM articles AS a');
 			$articles = $stmt->fetchAll();
 			// comments
-			$stmt = \src\core\Connect::getConn()->query('
+			$stmt = Connect::getConn()->query('
 				SELECT c.id, c.user_id, c.article_id, c.text, u.name FROM comments AS c JOIN users AS u ON u.id = c.user_id
 			');
 			$comments = $stmt->fetchAll();
 			// user articles
-			$allArticles = \src\core\Connect::getConn()->query('SELECT id, title FROM articles')->fetchAll();
+			$allArticles = Connect::getConn()->query('SELECT id, title FROM articles')->fetchAll();
 			// var_dump($allArticles);
 			parent::render('articles', [
 				'title' => 'Artigos',
@@ -60,7 +68,7 @@ class App extends Controller
 		}
 		if ($post) {
 			try {
-				$stmt = \src\core\Connect::getConn()->prepare('INSERT INTO articles (title, content) VALUES(:t, :c)');
+				$stmt = Connect::getConn()->prepare('INSERT INTO articles (title, content) VALUES(:t, :c)');
 				$stmt->bindValue('t', $post['title']);
 				$stmt->bindValue('c', $post['text']);
 				$stmt->execute();
@@ -84,16 +92,25 @@ class App extends Controller
 			header('Location: http://localhost:80/login');
 		}
 		if ($comment) {
+			// insert comments
 			/*
-			$stmt = \src\core\Connect::getConn()
-				->prepare('INSERT INTO comments (user_id, article_id, text) VALUES (:uid, :aid, :t)');
+			$connect = Connect::getConn();
+			$connect->prepare('INSERT INTO comments (user_id, article_id, text) VALUES (:uid, :aid, :t)');
 			$stmt->bindValue('uid', $_SESSION['user']->id);
 			$stmt->bindValue('aid', $articleId);
 			$stmt->bindValue('t', $comment);
 			$stmt->execute();
+			// insert notifications
+			$stmt = $connect->prepare('INSERT INTO notifications (user_id, article_id, text, opened, created_at) VALUES (:uid, :aid, :t, :o, :create)');
+			$stmt->bindValue('uid', $_SESSION['user']->id);
+			$stmt->bindValue('aid', $articleId);
+			$stmt->bindValue('t', $comment);
+			$stmt->bindValue('o', 0);
+			$stmt->bindValue('create', (new DateTimeImmutable())->format('Y-m-d H:i'));
+			$stmt->execute();
 			*/
-			$stmt = \src\core\Connect::getConn()
-				->prepare('SELECT id, title FROM articles WHERE id = ?');
+			// select articles
+			$stmt = Connect::getConn()->prepare('SELECT id, title FROM articles WHERE id = ?');
 			$stmt->bindValue(1, $articleId);
 			$stmt->execute();
 			$title = implode('_', explode(' ', $stmt->fetch()->title)) . "_{$articleId}";
