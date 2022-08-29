@@ -19,7 +19,6 @@ const formsComment = document.querySelectorAll('form.form-comment'),
         const form = e.target;
         const id = form.article_id.value;
         const formData = new FormData(form);
-        console.log(form.action);
         fetch(`${form.action}`, {
             method: form.method,
             body: formData

@@ -40,7 +40,7 @@ class App extends Controller
 			');
 			$comments = $stmt->fetchAll();
 			// user articles
-			$allArticles = Connect::getConn()->query('SELECT id, title FROM articles')->fetchAll();
+			$allArticles = Connect::getConn()->query('SELECT id, title FROM articles WHERE user_id = ' . $_SESSION['user']->id)->fetchAll();
 			// var_dump($allArticles);
 			parent::render('articles', [
 				'title' => 'Artigos',

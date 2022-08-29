@@ -75,7 +75,7 @@
 	const publish = function () {
 	<?php foreach ($allArticles as $article):
 		$title = implode('_', explode(' ', $article->title)) . "_{$article->id}"; ?>
-		// console.log('<?= $title; ?>');
+		console.log('<?= $title; ?>');
 		conn.subscribe('<?= $title; ?>', (topic, data) => {
 			data = JSON.parse(data);
 			fetch('http://localhost/views/assets/views-components/notify.php')
